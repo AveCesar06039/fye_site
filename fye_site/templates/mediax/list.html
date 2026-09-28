@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Media{% endblock %}
+{% block content %}
+<h1 class="mb-3">Media</h1>
+
+<p>
+  <a class="btn-primary" href="{% url 'mediax:create' %}">+ Subir archivo</a>
+</p>
+
+<div class="crud-table-wrap"><table class="crud-table">
+  <thead>
+    <tr><th>Archivo</th><th>Título</th><th>Visibilidad</th><th>Fecha</th></tr>
+  </thead>
+  <tbody>
+    {% for it in items %}
+      <tr>
+        <td><a href="{% url 'mediax:detail' it.pk %}">{{ it.file.name }}</a></td>
+        <td>{{ it.title|default:"—" }}</td>
+        <td>{{ it.get_visibility_display }}</td>
+        <td>{{ it.created_at }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4" class="text-center muted">Sin archivos</td></tr>
+    {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

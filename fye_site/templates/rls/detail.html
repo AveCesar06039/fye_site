@@ -1,0 +1,12 @@
+﻿{% extends "base.html" %}
+{% block title %}Detalle RLS{% endblock %}
+{% block content %}
+<h1>{{ obj.nombre }} {{ obj.numero }}</h1>
+<ul>
+  <li><strong>Homenaje a:</strong> {{ obj.homenaje_a }}</li>
+  <li><strong>Día:</strong> {{ obj.get_dia_trabajo_display }}</li>
+  <li><strong>Hora:</strong> {{ obj.hora_trabajo|time:"H:i" }}</li>
+  <li><strong>Lugar:</strong> {{ obj.lugar }}</li>
+</ul>
+<p><a class="btn-secondary" href="{% url 'rls:list' %}">Volver</a></p>
+{% endblock %}

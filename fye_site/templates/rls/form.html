@@ -1,0 +1,11 @@
+﻿{% extends "base.html" %}
+{% block title %}Nueva RLS{% endblock %}
+{% block content %}
+<h1>Nueva RLS</h1>
+<form method="post" class="crud-card django-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn-primary">Guardar</button>
+  <a class="btn-secondary" href="{% url 'rls:list' %}">Volver</a>
+</form>
+{% endblock %}

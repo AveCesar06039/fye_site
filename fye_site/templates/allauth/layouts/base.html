@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block head_title %}Acceso{% endblock head_title %} · Fe y Esperanza No. 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assents/css/styles.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="icon" href="{% static 'assents/imagenes/logo-fe-esperanza.png' %}" />
+  {% block extra_head %}{% endblock extra_head %}
+</head>
+<body class="auth-shell">
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="{% url 'home' %}" class="brand">
+        <img class="brand-logo" src="{% static 'assents/imagenes/logo-fe-esperanza.png' %}" alt="Fe y Esperanza No. 1" />
+        <div class="brand-text">
+          <strong>Fe y Esperanza No. 1</strong>
+          <small>de <strong>Francisco C. Rodríguez</strong></small>
+        </div>
+      </a>
+      <nav class="nav">
+        <a href="{% url 'home' %}"><i class="bi bi-arrow-left"></i>&nbsp;Volver al sitio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card card glass">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock content %}
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="copy">© {% now "Y" %} Respetable Logia Simbólica Fe y Esperanza No. 1</div>
+  </footer>
+  {% block extra_body %}{% endblock extra_body %}
+</body>
+</html>

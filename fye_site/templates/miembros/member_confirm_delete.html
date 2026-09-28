@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Eliminar miembro{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Eliminar miembro</h1>
+
+<p class="mb-4">
+  ¿Seguro que deseas eliminar al miembro
+  <strong>{{ object.first_name }} {{ object.last_name }} ({{ object.numero_registro }})</strong>?
+</p>
+
+<form method="post" class="flex gap-3">
+  {% csrf_token %}
+  <button type="submit"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+    Sí, eliminar
+  </button>
+  <a href="{% url 'miembros:detail' object.pk %}" class="px-4 py-2 rounded bg-slate-700 text-gray-100">
+    Cancelar
+  </a>
+</form>
+{% endblock %}

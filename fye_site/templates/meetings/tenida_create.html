@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card glass">
+        <h4 class="mb-3">📅 Nueva Tenida</h4>
+            <p class="muted">
+                Ingresa los datos generales. La lista de asistencia se generará automáticamente al guardar.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="grid md:grid-cols-12 gap-4">
+                    <div class="md:col-span-12">
+                        <label class="form-label">Respetable Logia Simbólica (RLS):</label>
+                        {{ form.rls }}
+                    </div>
+                    <div class="md:col-span-4">
+                        {{ form.fecha.label_tag }}
+                        {{ form.fecha }}
+                    </div>
+                    <div class="md:col-span-4">
+                        {{ form.tipo.label_tag }}
+                        {{ form.tipo }}
+                    </div>
+                    <div class="md:col-span-4">
+                        {{ form.grado.label_tag }}
+                        {{ form.grado }}
+                    </div>
+                    <div class="md:col-span-12">
+                        {{ form.tema.label_tag }}
+                        {{ form.tema }}
+                    </div>
+                    <div class="md:col-span-12">
+                        {{ form.observaciones.label_tag }}
+                        {{ form.observaciones }}
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <a href="{% url 'meetings:tenida_list' %}" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-primary">Guardar y Generar Lista ➡️</button>
+                </div>
+            </form>
+    </div>
+</div>
+{% endblock %} 

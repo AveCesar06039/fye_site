@@ -1,0 +1,10 @@
+﻿{% extends "base.html" %}
+{% block title %}Nueva Imagen{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Nueva Imagen</h1>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  <p class="text-gray-400">Formulario placeholder.</p>
+  <button class="bg-yellow-500 text-black px-3 py-1 rounded mt-3">Guardar</button>
+  <a class="ml-3 underline" href="{% url 'mediax:img_list' %}">Volver</a>
+</form>
+{% endblock %}

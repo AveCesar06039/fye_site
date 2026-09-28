@@ -1,0 +1,39 @@
+{% load widget_tweaks %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <h5>Datos generales</h5>
+  {{ form.rls|add_class:"form-select" }}
+  {{ form.user|add_class:"form-select" }}
+  {{ form.numero_registro|add_class:"form-control" }}
+
+  <!-- Aquí puedes ir poniendo fila por fila en el orden que definiste -->
+
+  <h5>Contacto de emergencia</h5>
+  {{ form.emergencia_nombre|add_class:"form-control" }}
+  {{ form.emergencia_relacion|add_class:"form-select" }}
+  {{ form.emergencia_telefono|add_class:"form-control" }}
+  {{ form.emergencia_telefono_alterno|add_class:"form-control" }}
+  {{ form.emergencia_domicilio|add_class:"form-control" }}
+
+  <h5>Beneficiarios</h5>
+  {{ formset.management_form }}
+  {% for bf in formset %}
+    <div class="card mb-2 p-2">
+        {{ bf.nombre|add_class:"form-control" }}
+        {{ bf.primer_apellido|add_class:"form-control" }}
+        {{ bf.segundo_apellido|add_class:"form-control" }}
+        {{ bf.relacion|add_class:"form-select" }}
+        {{ bf.porcentaje|add_class:"form-control" }}
+        {{ bf.fecha_nacimiento|add_class:"form-control" }}
+        {{ bf.domicilio|add_class:"form-control" }}
+        {{ bf.telefono|add_class:"form-control" }}
+        {% if bf.DELETE %}
+            <label>Eliminar</label> {{ bf.DELETE }}
+        {% endif %}
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn-primary">Guardar</button>
+</form>

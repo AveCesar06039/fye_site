@@ -1,0 +1,156 @@
+{# templates/miembros/list.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Miembros{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-semibold">Miembros</h1>
+  <a href="{% url 'miembros:create' %}"
+     class="bg-[var(--dorado)] text-black px-4 py-2 rounded font-semibold text-sm">
+    + Nuevo miembro
+  </a>
+</div>
+
+{# Filtros #}
+<form method="get" class="mb-6 grid md:grid-cols-5 gap-3 items-end">
+  <div>
+    <label class="block text-xs uppercase tracking-wide text-slate-300 mb-1">Buscar</label>
+    <input type="text" name="q" value="{{ filtros.q }}"
+           class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-100"
+           placeholder="Nombre, apellidos, registro…">
+  </div>
+
+  <div>
+    <label class="block text-xs uppercase tracking-wide text-slate-300 mb-1">Grado</label>
+    <select name="grado"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-100">
+      <option value="">Todos</option>
+      {% for value,label in GRADO_CHOICES %}
+        <option value="{{ value }}" {% if filtros.grado == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-xs uppercase tracking-wide text-slate-300 mb-1">Estado</label>
+    <select name="estado"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-100">
+      <option value="">Todos</option>
+      {% for value,label in ESTADO_CHOICES %}
+        <option value="{{ value }}" {% if filtros.estado == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-xs uppercase tracking-wide text-slate-300 mb-1">RLS</label>
+    <select name="rls"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm text-slate-100">
+      <option value="">Todas</option>
+      {% for r in rls_list %}
+        <option value="{{ r.id }}" {% if filtros.rls|add:'' == r.id|stringformat:"s" %}selected{% endif %}>
+          {{ r.nombre }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="flex gap-2">
+    <button class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded text-sm w-full">
+      Filtrar
+    </button>
+    <a href="{% url 'miembros:list' %}"
+       class="px-3 py-2 rounded border border-slate-600 text-sm text-slate-200 w-full text-center">
+      Limpiar
+    </a>
+  </div>
+</form>
+
+{# Tabla #}
+<div class="overflow-x-auto rounded-lg border border-slate-800">
+  <table class="min-w-full text-sm text-slate-100">
+    <thead class="bg-slate-900/70">
+      <tr>
+        <th class="px-3 py-2 text-left">#</th>
+        <th class="px-3 py-2 text-left">RLS</th>
+        <th class="px-3 py-2 text-left">Registro</th>
+        <th class="px-3 py-2 text-left">Nombre</th>
+        <th class="px-3 py-2 text-left">Grado</th>
+        <th class="px-3 py-2 text-left">Estado</th>
+        <th class="px-3 py-2 text-left">Cargo actual</th>
+        <th class="px-3 py-2 text-right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in miembros %}
+        <tr class="{% cycle 'bg-slate-900/40' 'bg-slate-900/20' %}">
+          <td class="px-3 py-2 align-top">{{ forloop.counter }}</td>
+          <td class="px-3 py-2 align-top">{{ m.rls.nombre }}</td>
+          <td class="px-3 py-2 align-top font-mono text-xs">{{ m.numero_registro }}</td>
+          <td class="px-3 py-2 align-top">
+            <a href="{% url 'miembros:detail' m.pk %}"
+               class="text-[var(--dorado)] hover:underline">
+              {{ m.primer_apellido }} {{ m.segundo_apellido }} {{ m.nombre }}
+            </a>
+          </td>
+          <td class="px-3 py-2 align-top">{{ m.get_grado_display }}</td>
+          <td class="px-3 py-2 align-top">{{ m.get_estado_display }}</td>
+          <td class="px-3 py-2 align-top">
+            {% if m.cargo_actual %}
+              {{ m.cargo_actual.nombre }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+          <td class="px-3 py-2 align-top text-right">
+            <div class="inline-flex gap-1">
+              <a href="{% url 'miembros:detail' m.pk %}"
+                 class="px-2 py-1 rounded bg-slate-800 border border-slate-700 text-xs">
+                Ver
+              </a>
+              <a href="{% url 'miembros:edit' m.pk %}"
+                 class="px-2 py-1 rounded bg-blue-600 text-xs text-white">
+                Editar
+              </a>
+              <form method="post"
+                    action="{% url 'miembros:delete' m.pk %}"
+                    onsubmit="return confirm('¿Seguro que deseas eliminar este miembro?');">
+                {% csrf_token %}
+                <button type="submit"
+                        class="px-2 py-1 rounded bg-red-700 text-xs text-white">
+                  Eliminar
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="8" class="px-3 py-4 text-center text-slate-400">
+            No hay miembros que coincidan con el filtro.
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# Paginación sencilla #}
+{% if is_paginated %}
+  <div class="mt-4 flex justify-between items-center text-xs text-slate-300">
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    <div class="flex gap-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode|cut:'page='|cut:page_obj.number|stringformat:'s' }}"
+           class="px-2 py-1 border border-slate-600 rounded">Anterior</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode|cut:'page='|cut:page_obj.number|stringformat:'s' }}"
+           class="px-2 py-1 border border-slate-600 rounded">Siguiente</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

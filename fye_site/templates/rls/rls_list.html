@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}RLS{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Respetables Logias Simbólicas</h1>
+<a href="{% url 'rls:create' %}" class="underline">+ Nueva</a>
+<div class="overflow-x-auto">
+<table class="w-full text-sm mt-3">
+  <thead class="bg-slate-700"><tr><th class="p-2">Nombre</th><th>Número</th><th>Oriente</th></tr></thead>
+  <tbody>
+  {% for r in object_list %}
+    <tr class="border-b border-slate-600 hover:bg-slate-800">
+      <td class="p-2">{{ r.nombre }}</td>
+      <td class="text-center">{{ r.numero }}</td>
+      <td class="text-center">{{ r.oriente }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="3" class="text-center p-3 text-gray-400">No hay RLS registradas</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

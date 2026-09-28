@@ -1,0 +1,149 @@
+﻿{% extends "base.html" %}
+{% block title %}Miembros{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Miembros</h1>
+
+<!-- 🔎 Filtros -->
+<form method="get" class="bg-slate-800 p-4 rounded-lg mb-4 grid md:grid-cols-4 gap-4 text-sm">
+  <div>
+    <label class="block mb-1">Buscar:</label>
+    <input type="text" name="q"
+           value="{{ filtros.q }}"
+           class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm"
+           placeholder="Nombre, apellido o núm. registro">
+  </div>
+
+  <div>
+    <label class="block mb-1">Grado:</label>
+    <select name="grado"
+            class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm">
+      <option value="">Todos</option>
+      {% for value,label in GRADO_CHOICES %}
+        <option value="{{ value }}" {% if filtros.grado == value %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block mb-1">Estado:</label>
+    <select name="estado"
+            class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm">
+      <option value="">Todos</option>
+      {% for value,label in ESTADO_CHOICES %}
+        <option value="{{ value }}" {% if filtros.estado == value %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block mb-1">RLS:</label>
+    <select name="rls"
+            class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sm">
+      <option value="">Todas</option>
+      {% for r in rls_list %}
+        <option value="{{ r.id }}" {% if filtros.rls|add:"" == r.id|stringformat:"s" %}selected{% endif %}>
+          {{ r.nombre }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="md:col-span-4 flex gap-3 mt-2">
+    <button class="bg-[var(--dorado)] text-black px-4 py-2 rounded font-semibold text-sm">
+      Aplicar filtros
+    </button>
+    <a href="{% url 'miembros:list' %}" class="underline text-sm">Limpiar</a>
+    <a href="{% url 'miembros:create' %}"
+       class="ml-auto bg-blue-500 px-4 py-2 rounded text-sm font-semibold">
+      + Nuevo miembro
+    </a>
+  </div>
+</form>
+
+<!-- 📋 Tabla -->
+<div class="overflow-x-auto">
+  <table class="min-w-full text-sm">
+    <thead>
+      <tr class="bg-slate-800 text-left">
+        <th class="px-3 py-2">
+          <a href="?q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order=numero_registro">
+            Núm.
+          </a>
+        </th>
+        <th class="px-3 py-2">
+          <a href="?q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order=apellido">
+            Apellido y nombre
+          </a>
+        </th>
+        <th class="px-3 py-2">
+          <a href="?q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order=rls">
+            RLS
+          </a>
+        </th>
+        <th class="px-3 py-2">
+          <a href="?q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order=grado">
+            Grado
+          </a>
+        </th>
+        <th class="px-3 py-2">
+          <a href="?q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order=estado">
+            Estado
+          </a>
+        </th>
+        <th class="px-3 py-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in miembros %}
+        <tr class="border-b border-slate-800 hover:bg-slate-800/60">
+          <td class="px-3 py-2">{{ m.numero_registro }}</td>
+          <td class="px-3 py-2">
+            <a href="{% url 'miembros:detail' m.pk %}" class="underline">
+              {{ m.primer_apellido }} {{ m.segundo_apellido }} {{ m.nombre }}
+            </a>
+          </td>
+          <td class="px-3 py-2">{{ m.rls.nombre }}</td>
+          <td class="px-3 py-2">
+            {% if m.grado == "APR" %}Aprendiz{% elif m.grado == "COM" %}Compañero{% elif m.grado == "MAE" %}Maestro{% else %}{{ m.grado }}{% endif %}
+          </td>
+          <td class="px-3 py-2">
+            {% if m.estado == "ACT" %}Activo{% elif m.estado == "SUE" %}En sueños{% else %}{{ m.estado }}{% endif %}
+          </td>
+          <td class="px-3 py-2 space-x-2">
+            <a href="{% url 'miembros:detail' m.pk %}" class="underline">Ver</a>
+            <a href="{% url 'miembros:update' m.pk %}" class="underline">Editar</a>
+            <a href="{% url 'miembros:delete' m.pk %}" class="underline text-red-300">Eliminar</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6" class="px-3 py-4 text-center text-slate-400">
+            No hay miembros que coincidan con los filtros.
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- 🔄 Paginación simple -->
+{% if is_paginated %}
+  <div class="mt-4 flex gap-2 items-center text-sm">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order={{ filtros.order }}"
+         class="underline">Anterior</a>
+    {% endif %}
+    <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&q={{ filtros.q }}&grado={{ filtros.grado }}&estado={{ filtros.estado }}&rls={{ filtros.rls }}&order={{ filtros.order }}"
+         class="underline">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

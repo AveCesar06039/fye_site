@@ -1,0 +1,7 @@
+﻿{% extends "base.html" %}
+{% block title %}Detalle Tenida{% endblock %}
+{% block content %}
+<h1 class="text-xl font-semibold mb-4">Detalle de Tenida</h1>
+<p class="text-gray-400">Detalle placeholder (pk: {{ view.kwargs.pk }}).</p>
+<a class="underline" href="{% url 'meetings:tenida_list' %}">Volver</a>
+{% endblock %}

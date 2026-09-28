@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Media{% endblock %}
+{% block content %}
+<h1 class="mb-3">Nuevo Media</h1>
+<form method="post" enctype="multipart/form-data" class="crud-card django-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div class="mt-2">
+    <button class="btn-primary">Guardar</button>
+    <a class="btn-secondary" href="{% url 'mediax:list' %}">Volver</a>
+  </div>
+</form>
+{% endblock %}

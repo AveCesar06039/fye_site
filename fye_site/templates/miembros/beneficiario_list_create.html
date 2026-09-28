@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Beneficiarios{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Beneficiarios de {{ miembro }}</h1>
+
+<h2 class="text-lg font-semibold mb-2">Registrados</h2>
+<ul class="mb-4 list-disc list-inside">
+  {% for b in beneficarios %}
+    <li>{{ b.nombre }} {{ b.primer_apellido }} ({{ b.get_relacion_display }}) - {{ b.porcentaje }}%</li>
+  {% empty %}
+    <li>No hay beneficiarios registrados.</li>
+  {% endfor %}
+</ul>
+
+<h2 class="text-lg font-semibold mb-2">Agregar nuevo beneficiario</h2>
+<form method="post" class="space-y-3 django-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="bg-[var(--dorado)] text-black px-4 py-2 rounded font-semibold">
+    Guardar
+  </button>
+  <a href="{% url 'miembros:detail' miembro.pk %}" class="ml-3 text-sm underline text-gray-300">
+    Volver al miembro
+  </a>
+</form>
+{% endblock %}

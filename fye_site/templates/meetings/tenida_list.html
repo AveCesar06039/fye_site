@@ -1,0 +1,35 @@
+{% extends 'base.html' %} 
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Bitácora de Tenidas</h2>
+    <div class="crud-table-wrap"><table class="crud-table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Grado</th>
+                <th>Tema</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tenida in tenidas %}
+            <tr>
+                <td>{{ tenida.fecha }}</td>
+                <td>{{ tenida.get_tipo_display }}</td>
+                <td>{{ tenida.get_grado_display }}</td>
+                <td>{{ tenida.tema }}</td>
+                <td>
+                    <a href="{% url 'meetings:tenida_edit' tenida.pk %}" class="btn-primary btn-sm">
+                        📋 Pasar Lista
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay tenidas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table></div>
+</div>
+{% endblock %}

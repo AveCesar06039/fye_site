@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Miembro: {{ obj.nombre }} {{ obj.primer_apellido }}{% endblock %}
+
+{% block content %}
+<div class="flex items-start justify-between mb-4">
+  <h1 class="text-2xl font-semibold">
+    {{ obj.nombre }} {{ obj.primer_apellido }}{% if obj.segundo_apellido %} {{ obj.segundo_apellido }}{% endif %}
+  </h1>
+  <div class="flex gap-2">
+    <a href="{% url 'miembros:update' obj.pk %}" class="px-3 py-1 rounded bg-blue-600">Editar</a>
+    <a href="{% url 'miembros:delete' obj.pk %}" class="px-3 py-1 rounded bg-red-600">Borrar</a>
+  </div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-6">
+  <div>
+    {% if obj.foto %}
+      <img src="{{ obj.foto.url }}" alt="{{ obj }}" class="rounded-lg w-full max-w-xs">
+    {% else %}
+      <div class="w-full max-w-xs aspect-[3/4] rounded-lg bg-slate-800 grid place-items-center text-slate-400">Sin foto</div>
+    {% endif %}
+  </div>
+
+  <div class="md:col-span-2 space-y-2">
+    <p><strong>RLS:</strong> {{ obj.rls }}</p>
+    <p><strong>Grado:</strong> {{ obj.get_grado_display }}</p>
+    <p><strong>Estado:</strong> {% if obj.estado == "ACT" %}Activo{% else %}En sueños{% endif %}</p>
+    <p><strong># Registro:</strong> {{ obj.numero_registro }}</p>
+    <p><strong>Correo:</strong> {{ obj.correo_electronico|default:"—" }}</p>
+    <p><strong>Celular:</strong> {{ obj.numero_celular|default:"—" }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ obj.fecha_nacimiento|date:"d/m/Y"|default:"—" }}</p>
+    <p><strong>Fecha de iniciación:</strong> {{ obj.fecha_iniciacion|date:"d/m/Y"|default:"—" }}</p>
+    <p><strong>Domicilio particular:</strong> {{ obj.domicilio_particular|default:"—" }}</p>
+    <p><strong>Domicilio de trabajo:</strong> {{ obj.domicilio_trabajo|default:"—" }}</p>
+  </div>
+</div>
+
+<hr class="my-6 border-slate-700">
+
+<h2 class="text-xl font-semibold mb-2">Beneficiarios</h2>
+{% if obj.beneficiarios.all %}
+  <ul class="space-y-1">
+    {% for b in obj.beneficiarios.all %}
+      <li class="bg-slate-800 rounded p-3">
+        <div class="font-medium">{{ b.nombre }} {{ b.primer_apellido }}{% if b.segundo_apellido %} {{ b.segundo_apellido }}{% endif %}</div>
+        <div class="text-sm text-slate-300">
+          {{ b.get_relacion_display }}{% if b.porcentaje %} • {{ b.porcentaje }}%{% endif %}
+          {% if b.telefono %} • {{ b.telefono }}{% endif %}
+          {% if b.fecha_nacimiento %} • Nac.: {{ b.fecha_nacimiento|date:"d/m/Y" }}{% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-slate-400">Sin beneficiarios capturados.</p>
+{% endif %}
+
+<div class="mt-6">
+  <a href="{% url 'miembros:list' %}" class="underline">Volver al listado</a>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Detalle Media{% endblock %}
+{% block content %}
+<h1 class="mb-3">Detalle Media</h1>
+<p><strong>Título:</strong> {{ item.title|default:"—" }}</p>
+<p><strong>Visibilidad:</strong> {{ item.get_visibility_display }}</p>
+<p><strong>Subido por:</strong> {{ item.uploaded_by|default:"—" }}</p>
+<p><strong>Archivo:</strong> <a href="{{ item.file.url }}" target="_blank">{{ item.file.name }}</a></p>
+<p><a class="btn-secondary" href="{% url 'mediax:list' %}">Volver</a></p>
+{% endblock %}

@@ -1,0 +1,200 @@
+﻿{% extends "base.html" %}
+{% block title %}Detalle de miembro{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-6">
+  Detalle de miembro
+</h1>
+
+<div class="bg-slate-900 border border-slate-700 rounded-lg p-6 space-y-4">
+  <div class="grid md:grid-cols-3 gap-6">
+    
+    <div>
+      {% if obj.foto %}
+        <img src="{{ obj.foto.url }}" alt="{{ obj }}" class="rounded-lg w-full max-w-xs">
+      {% else %}
+        <div class="w-full max-w-xs aspect-[3/4] rounded-lg bg-slate-800 grid place-items-center text-slate-400">Sin foto</div>
+      {% endif %}
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 md:col-span-2">
+      <div>
+        <p class="text-xs text-slate-400">RLS</p>
+        <p class="font-semibold">
+          {{ obj.rls.nombre }} {% if obj.rls.numero %}No. {{ obj.rls.numero }}{% endif %}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Número de registro</p>
+        <p class="font-semibold">{{ obj.numero_registro }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Nombre completo</p>
+        <p class="font-semibold">
+          {{ obj.nombre }} {{ obj.primer_apellido }} {{ obj.segundo_apellido }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Grado</p>
+        <p class="font-semibold">{{ obj.get_grado_display }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Estado</p>
+        <p class="font-semibold">{{ obj.get_estado_display }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Fecha de nacimiento</p>
+        <p class="font-semibold">
+          {% if obj.fecha_nacimiento %}
+            {{ obj.fecha_nacimiento|date:"d/m/Y" }}
+          {% else %}
+            —
+          {% endif %}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Fecha de iniciación</p>
+        <p class="font-semibold">
+          {% if obj.fecha_iniciacion %}
+            {{ obj.fecha_iniciacion|date:"d/m/Y" }}
+          {% else %}
+            —
+          {% endif %}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Correo electrónico</p>
+        <p class="font-semibold">{{ obj.correo_electronico|default:"—" }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Correo alterno</p>
+        <p class="font-semibold">{{ obj.correo_alterno|default:"—" }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Número celular</p>
+        <p class="font-semibold">{{ obj.numero_celular|default:"—" }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Teléfono fijo</p>
+        <p class="font-semibold">{{ obj.telefono_fijo|default:"—" }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Cargo actual</p>
+        <p class="font-semibold">
+          {% if obj.cargo_actual %}
+            {{ obj.cargo_actual.nombre }}
+          {% else %}
+            —
+          {% endif %}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400">Tipo sanguíneo</p>
+        <p class="font-semibold">
+          {{ obj.tipo_sanguineo|default:"—" }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="border-slate-700 my-4">
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <p class="text-xs text-slate-400">Domicilio particular</p>
+      <p class="whitespace-pre-line">
+        {{ obj.domicilio_particular|default:"—" }}
+      </p>
+    </div>
+
+    <div>
+      <p class="text-xs text-slate-400">Domicilio de trabajo</p>
+      <p class="whitespace-pre-line">
+        {{ obj.domicilio_trabajo|default:"—" }}
+      </p>
+    </div>
+  </div>
+
+  <hr class="border-slate-700 my-4">
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <div>
+      <h2 class="text-lg font-semibold mb-2">Contacto de emergencia</h2>
+      <div class="space-y-1 text-sm">
+        <p><span class="text-slate-400">Nombre:</span> {{ obj.emergencia_nombre|default:"—" }}</p>
+        <p><span class="text-slate-400">Nombre:</span> {{ obj.emergencia_relacion|default:"—" }}</p>
+        <p><span class="text-slate-400">Teléfono:</span> {{ obj.emergencia_telefono|default:"—" }}</p>
+        <p><span class="text-slate-400">Teléfono alterno:</span> {{ obj.emergencia_telefono_alterno|default:"—" }}</p>
+        <p class="text-slate-400 text-xs mt-2">Domicilio contacto de emergencia</p>
+        <p class="whitespace-pre-line">
+          {{ obj.emergencia_domicilio|default:"—" }}
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-lg font-semibold mb-2">Observaciones</h2>
+      <p class="text-sm whitespace-pre-line">
+        {{ obj.observaciones|default:"—" }}
+      </p>
+    </div>
+  </div>
+
+  <hr class="border-slate-700 my-4">
+
+  <div>
+    <h2 class="text-lg font-semibold mb-2">Beneficiarios</h2>
+    {% if obj.beneficiarios.all %}
+      <div class="space-y-2">
+        {% for b in obj.beneficiarios.all %}
+          <div class="border border-slate-700 rounded p-3 text-sm">
+            <p class="font-semibold">
+              {{ b.nombre_completo }}
+            </p>
+            {% if b.relacion %}
+              <p>Parentesco: {{ b.get_relacion_display }}</p>
+            {% endif %}
+            {% if b.telefono %}
+              <p>Teléfono: {{ b.telefono }}</p>
+            {% endif %}
+            {% if b.correo %}
+              <p>Correo: {{ b.correo }}</p>
+            {% endif %}
+            {% if b.porcentaje %}
+              <p>Porcentaje: {{ b.porcentaje }}%</p>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p class="text-slate-400 text-sm">Sin beneficiarios registrados.</p>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-slate-400 text-sm">Sin beneficiarios registrados.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<div class="mt-6 flex gap-3">
+  <a href="{% url 'miembros:list' %}"
+    class="px-4 py-2 rounded bg-slate-800 border border-slate-600 text-sm">
+    ⬅ Volver al listado
+  </a>
+  <a href="{% url 'miembros:edit' obj.pk %}"
+    class="px-4 py-2 rounded bg-[var(--dorado)] text-black text-sm font-semibold">
+    ✏ Editar
+  </a>
+</div>
+{% endblock %}

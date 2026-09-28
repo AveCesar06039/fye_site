@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Detalle tenida{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Detalle de la tenida</h1>
+
+<div class="bg-slate-800 p-4 rounded-lg space-y-2">
+  <p><strong>ID:</strong> {{ tenida.id }}</p>
+
+  {% if tenida.fecha %}
+    <p><strong>Fecha:</strong> {{ tenida.fecha|date:"d/m/Y" }}</p>
+  {% endif %}
+
+  {% if tenida.hora %}
+    <p><strong>Hora:</strong> {{ tenida.hora }}</p>
+  {% endif %}
+
+  {% if tenida.rls %}
+    <p><strong>RLS:</strong> {{ tenida.rls }}</p>
+  {% endif %}
+
+  {% if tenida.tema %}
+    <p><strong>Tema:</strong> {{ tenida.tema }}</p>
+  {% endif %}
+
+  {% if tenida.descripcion %}
+    <p><strong>Descripción:</strong> {{ tenida.descripcion|linebreaksbr }}</p>
+  {% endif %}
+</div>
+
+<div class="mt-4">
+  <a href="{% url 'meetings:tenida_list' %}" class="underline text-gray-300">Volver al listado</a>
+</div>
+{% endblock %}

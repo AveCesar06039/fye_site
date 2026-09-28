@@ -1,0 +1,86 @@
+# miembros/views.py
+from django.db.models import Q
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .models import Member
+from rls.models import RLS
+from .forms import MemberForm, BeneficiarioForm
+
+class MemberListView(LoginRequiredMixin, ListView):
+    model = Member
+    template_name = "miembros/list.html"
+    context_object_name = "miembros"
+    paginate_by = 25
+
+    def get_queryset(self):
+        qs = (
+            Member.objects
+            .select_related("rls", "cargo_actual")
+        )
+
+        q = self.request.GET.get("q")
+        grado = self.request.GET.get("grado")
+        estado = self.request.GET.get("estado")
+        rls_id = self.request.GET.get("rls")
+        order_param = self.request.GET.get("order")
+
+        # 🔍 Búsqueda de texto
+        if q:
+            qs = qs.filter(
+                Q(nombre__icontains=q)
+                | Q(primer_apellido__icontains=q)
+                | Q(segundo_apellido__icontains=q)
+                | Q(numero_registro__icontains=q)
+            )
+
+        # 🎓 Filtro por grado
+        if grado:
+            qs = qs.filter(grado=grado)
+
+        # 💤 / ✅ Filtro por estado
+        if estado:
+            qs = qs.filter(estado=estado)
+
+        # 🏛️ Filtro por RLS
+        if rls_id:
+            qs = qs.filter(rls_id=rls_id)
+
+        # ↕️ Ordenamiento permitido
+        allowed_orders = {
+            "nombre": "nombre",
+            "-nombre": "-nombre",
+            "apellido": "primer_apellido",
+            "-apellido": "-primer_apellido",
+            "numero_registro": "numero_registro",
+            "-numero_registro": "-numero_registro",
+            "grado": "grado",
+            "-grado": "-grado",
+            "estado": "estado",
+            "-estado": "-estado",
+            "rls": "rls__nombre",
+            "-rls": "-rls__nombre",
+        }
+
+        if order_param in allowed_orders:
+            qs = qs.order_by(allowed_orders[order_param], "primer_apellido", "nombre")
+        else:
+            # Orden por defecto
+            qs = qs.order_by("rls__nombre", "primer_apellido", "nombre")
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["filtros"] = {
+            "q": self.request.GET.get("q", ""),
+            "grado": self.request.GET.get("grado", ""),
+            "estado": self.request.GET.get("estado", ""),
+            "rls": self.request.GET.get("rls", ""),
+            "order": self.request.GET.get("order", ""),
+        }
+        ctx["GRADO_CHOICES"] = Member.GRADO_CHOICES
+        ctx["ESTADO_CHOICES"] = Member.ESTADO
+        ctx["rls_list"] = RLS.objects.all().order_by("nombre")
+        return ctx

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card glass">
+        <h4 class="mb-3">📋 Registro de Asistencia y Cargos</h4>
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="grid md:grid-cols-4 gap-4 mb-4">
+                    <div>{{ form.fecha.label_tag }} {{ form.fecha }}</div>
+                    <div>{{ form.tipo.label_tag }} {{ form.tipo }}</div>
+                    <div>{{ form.grado.label_tag }} {{ form.grado }}</div>
+                    <div>{{ form.tema.label_tag }} {{ form.tema }}</div>
+                </div>
+
+                <hr>
+
+                <h5>Listado de Hermanos</h5>
+                {{ asistencias.management_form }}
+                
+                <div class="crud-table-wrap">
+                    <table class="crud-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">Hermano</th>
+                                <th style="width: 25%;">Puesto del Día</th>
+                                <th style="width: 10%; text-align: center;">Asistencia</th>
+                                <th style="width: 35%;">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form_asistencia in asistencias %}
+                                {{ form_asistencia.id }}
+                                <tr>
+                                    <td>
+                                        <strong>{{ form_asistencia.instance.miembro }}</strong>
+                                        <div style="display:none;">{{ form_asistencia.miembro }}</div>
+                                    </td>
+                                    <td>{{ form_asistencia.puesto }}</td>
+                                    <td class="text-center">
+                                        <div class="flex justify-center">
+                                            {{ form_asistencia.presente }}
+                                        </div>
+                                    </td>
+                                    <td>{{ form_asistencia.observaciones }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" class="btn-primary btn-lg mt-3">💾 Guardar Asistencia</button>
+                <a href="{% url 'meetings:tenida_list' %}" class="btn-secondary btn-lg mt-3">Cancelar</a>
+            </form>
+    </div>
+</div>
+{% endblock %}

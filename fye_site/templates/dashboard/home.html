@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Dashboard</h1>
+
+{# KPIs #}
+<div class="grid md:grid-cols-3 gap-4">
+  <div class="bg-slate-800 p-4 rounded-lg shadow text-center">
+    <h3 class="text-sm text-gray-400">Miembros activos</h3>
+    <p class="text-3xl font-bold text-[var(--dorado)]">{{ kpi_miembros_activos }}</p>
+  </div>
+  <div class="bg-slate-800 p-4 rounded-lg shadow text-center">
+    <h3 class="text-sm text-gray-400">En sueños</h3>
+    <p class="text-3xl font-bold text-blue-300">{{ kpi_miembros_suenos }}</p>
+  </div>
+  <div class="bg-slate-800 p-4 rounded-lg shadow text-center">
+    <h3 class="text-sm text-gray-400">Tenidas este año</h3>
+    <p class="text-3xl font-bold text-red-300">{{ kpi_tenidas_ano }}</p>
+  </div>
+</div>
+
+{# Acciones rápidas #}
+<div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+  {# Miembros #}
+  <div class="bg-slate-800 p-4 rounded-lg shadow flex flex-col gap-2">
+    <h2 class="text-lg font-semibold">Miembros</h2>
+    <p class="text-xs text-gray-400">Gestión de miembros de la RLS.</p>
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'miembros:list' %}"
+        class="bg-[var(--dorado)] text-black px-3 py-2 rounded text-sm font-semibold">
+        Ver miembros
+      </a>
+      {% if request.user.is_staff %}
+      <a href="{% url 'miembros:create' %}"
+        class="bg-slate-700 text-gray-100 px-3 py-2 rounded text-sm">
+        Nuevo miembro
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Tenidas #}
+  <div class="bg-slate-800 p-4 rounded-lg shadow flex flex-col gap-2">
+    <h2 class="text-lg font-semibold">Tenidas</h2>
+    <p class="text-xs text-gray-400">Registro y control de tenidas.</p>
+    <div class="flex flex-wrap gap-2">
+    <a href="{% url 'meetings:tenida_list' %}"
+        class="bg-[var(--dorado)] text-black px-3 py-2 rounded text-sm font-semibold">
+        Ver tenidas
+      </a>
+      {% if request.user.is_staff %}
+      <a href="{% url 'meetings:tenida_create' %}"
+        class="bg-slate-700 text-gray-100 px-3 py-2 rounded text-sm">
+        Nueva Tenida
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

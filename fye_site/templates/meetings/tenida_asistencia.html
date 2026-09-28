@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Asistencia - {{ tenida.rls.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card glass">
+    <h2 class="mb-3 text-center">
+      Registro de Asistencia
+    </h2>
+    <h5 class="muted text-center mb-4">
+      {{ tenida.rls.nombre }} — {{ tenida.fecha|date:"d/m/Y" }}  
+      <br>
+      <small>{{ tenida.tipo }} (Grado: {{ tenida.grado_trabajo }})</small>
+    </h5>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="crud-table-wrap">
+        <table class="crud-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Miembro</th>
+              <th>Presente</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for form, miembro in form.helper_members|zip:form.forms %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ miembro.get_full_name|default:miembro.username }}</td>
+              <td class="text-center">
+                {{ form.presente }}
+              </td>
+              <td>
+                {{ form.observaciones }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between mt-4">
+        <a href="{% url 'meetings:tenida_detail' tenida.pk %}" class="btn-secondary">
+          <i class="bi bi-arrow-left"></i> Volver
+        </a>
+        <button type="submit" class="btn-primary">
+          <i class="bi bi-check2-circle"></i> Guardar asistencia
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

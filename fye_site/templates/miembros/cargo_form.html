@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ object|default_if_none:"Nuevo cargo" }}{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">
+  {% if object %}Editar cargo{% else %}Nuevo cargo{% endif %}
+</h1>
+
+<form method="post" class="space-y-4">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  {% for field in form.visible_fields %}
+    <div>
+      <label class="block text-sm font-medium mb-1 text-slate-200">
+        {{ field.label }}:
+      </label>
+
+      {% if field.name == "activo" %}
+        <label class="inline-flex items-center gap-2 text-slate-200">
+          {{ field }}
+          <span class="text-sm">Activo</span>
+        </label>
+      {% else %}
+        {{ field }}
+      {% endif %}
+
+      {% if field.help_text %}
+        <p class="text-xs text-slate-400 mt-1">{{ field.help_text }}</p>
+      {% endif %}
+      {% for e in field.errors %}
+        <p class="text-red-400 text-xs mt-1">{{ e }}</p>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <div class="mt-6 flex gap-4">
+    <button class="bg-[var(--dorado)] text-black px-4 py-2 rounded font-semibold">
+      Guardar
+    </button>
+    <a href="{% url 'miembros:list' %}" class="underline">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

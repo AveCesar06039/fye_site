@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Panel Logia{% endblock %} · Fe y Esperanza No. 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assents/css/styles.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="icon" href="{% static 'assents/imagenes/logo-fe-esperanza.png' %}" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="panel-header">
+    <div class="container nav-wrap">
+      <a href="{% url 'dashboard:home' %}" class="brand">
+        <img class="brand-logo" src="{% static 'assents/imagenes/logo-fe-esperanza.png' %}" alt="Fe y Esperanza No. 1" />
+        <div class="brand-text">
+          <strong>Fe y Esperanza No. 1</strong>
+          <small>Panel privado</small>
+        </div>
+      </a>
+      <nav class="panel-nav">
+        <a href="{% url 'miembros:list' %}" class="primary">Ver miembros</a>
+        <a href="{% url 'meetings:tenida_list' %}">Tenidas</a>
+        {# Ajusta esta linea cuando definas la url real de finance #}
+        {# <a href="{% url 'finance:list' %}">Cuotas</a> #}
+        <a href="{% url 'mediax:doc_list' %}">Documentos</a>
+        <a href="{% url 'mediax:img_list' %}">Galería</a>
+        <a href="{% url 'rls:list' %}">RLS</a>
+        <a href="{% url 'account_logout' %}" class="exit"><i class="bi bi-box-arrow-right"></i>&nbsp;Salir</a>
+      </nav>
+    </div>
+  </header>
+
+  {% if messages %}
+    <div class="container mt-4">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main class="flex-1 container py-6">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="copy">© {% now "Y" %} R∴L∴S∴ Fe y Esperanza No. 1 — Ing. Juan Antonio Leija Méndez.</div>
+  </footer>
+</body>
+</html>
