@@ -1,0 +1,37 @@
+# Entornos virtuales
+.venv/
+.venv_old/
+venv/
+fye_site/.venv/
+fye_site/venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# Variables de entorno / secretos
+.env
+fye_site/.env
+*.env
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Empaquetados sueltos
+miembros/miembros.zip
+
+# Archivos con datos sensibles (no deben subirse nunca)
+DATOS.docx
+
+# Backups sueltos de codigo (duplicados, no se versionan)
+fye_site/miembros/miembros.zip
