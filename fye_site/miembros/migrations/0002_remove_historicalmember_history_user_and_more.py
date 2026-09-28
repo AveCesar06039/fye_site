@@ -134,10 +134,14 @@ class Migration(migrations.Migration):
             field=models.CharField(blank=True, choices=[('CONYUJE', 'Cónyuge'), ('HIJO', 'Hijo/a'), ('PADRE', 'Padre'), ('MADRE', 'Madre'), ('HERMANO', 'Hermano/a'), ('OTRO', 'Otro')], max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='cargohistorico',
-            name='member',
-            field=models.ForeignKey(default=django.utils.timezone.now, on_delete=django.db.models.deletion.CASCADE, related_name='historial_cargos', to='miembros.member'),
-            preserve_default=False,
+          model_name='cargohistorico',
+name='member',
+field=models.ForeignKey(
+null=True,
+on_delete=django.db.models.deletion.CASCADE,
+related_name='historial_cargos',
+to='miembros.member'
+),
         ),
         migrations.AddField(
             model_name='member',
