@@ -19,7 +19,12 @@ DEBUG = env.bool("DEBUG", default=True)
 
 # ALLOWED_HOSTS: lista separada por comas en la variable de entorno, ej:
 # ALLOWED_HOSTS=tu-app.onrender.com,www.tu-app.onrender.com
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+    # Django
+ALLOWED_HOSTS = [
+    "fye-site1.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 ROOT_URLCONF = 'fye_site.urls'  # <- ajusta al nombre real del paquete del proyecto
 
@@ -186,7 +191,9 @@ SESSION_COOKIE_SECURE = not DEBUG
 
 # CSRF_TRUSTED_ORIGINS: lista separada por comas en la variable de entorno, ej:
 # CSRF_TRUSTED_ORIGINS=https://tu-app.onrender.com
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+CSRF_TRUSTED_ORIGINS = [
+    "https://fye-site1.onrender.com",
+]
 
 #SECRET_KEY=dev-secret
 #DEBUG=True
